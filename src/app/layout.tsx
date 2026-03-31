@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ParticleField from "@/components/3d/ParticleField";
 import SplashCursor from "@/components/ui/SplashCursor";
+import AIChatBot from "@/components/ui/AIChatBot";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-white/20 cursor-none`}
       >
+        <AIChatBot />
         <SplashCursor />
         <ParticleField />
         <Navbar />
