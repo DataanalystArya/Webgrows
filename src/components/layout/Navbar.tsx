@@ -60,7 +60,7 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.2, 0, 0, 1] }}
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
-          isScrolled || isOpen ? "bg-black/80 backdrop-blur-xl border-b border-white/5" : "bg-transparent"
+          isScrolled || isOpen ? "bg-black/80 md:backdrop-blur-xl border-b border-white/5" : "bg-transparent"
         }`}
       >
         <div className="max-w-[1440px] mx-auto px-6 md:px-24 h-24 flex items-center justify-between relative z-[110]">

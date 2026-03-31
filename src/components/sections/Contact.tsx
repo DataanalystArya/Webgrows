@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useCallback } from "react";
 import * as THREE from "three";
@@ -59,7 +59,9 @@ function WireframeGlobe() {
 }
 
 export default function ContactSection() {
-  const { dpr, shadows } = useMobilePerformance();
+  const { dpr, shadows, isTouch } = useMobilePerformance();
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { margin: "100px" });
   const formRef = useRef<HTMLDivElement>(null);
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,7 +82,7 @@ export default function ContactSection() {
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!formRef.current) return;
+    if (!formRef.current || isTouch) return;
     const rect = formRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -100,13 +102,15 @@ export default function ContactSection() {
   }, []);
 
   return (
-    <section id="contact" className="py-24 bg-[#050505]/80 border-t border-white/5 relative flex items-center min-h-screen lg:min-h-0 overflow-hidden">
+    <section id="contact" ref={sectionRef} className="py-24 bg-[#050505]/80 border-t border-white/5 relative flex items-center min-h-screen lg:min-h-0 overflow-hidden">
       
       {/* 3D Wireframe Globe Background */}
       <div className="absolute inset-0 opacity-40 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={dpr} shadows={shadows}>
-          <WireframeGlobe />
-        </Canvas>
+        {isInView && (
+          <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={dpr} shadows={shadows}>
+            <WireframeGlobe />
+          </Canvas>
+        )}
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center relative z-10 perspective-1000">

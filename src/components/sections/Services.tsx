@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { useRef, useCallback } from "react";
 import WorkspaceModel from "@/components/3d/HighFidelityWorkspace";
@@ -16,6 +16,7 @@ const SERVICES = [
 ];
 
 function ServiceCard({ service, index }: { service: typeof SERVICES[0]; index: number }) {
+  const { isTouch } = useMobilePerformance();
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = useCallback(() => {
@@ -24,7 +25,7 @@ function ServiceCard({ service, index }: { service: typeof SERVICES[0]; index: n
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || isTouch) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -92,9 +93,11 @@ function ServiceCard({ service, index }: { service: typeof SERVICES[0]; index: n
 }
 
 export default function ServicesSection() {
-  const { dpr, shadows } = useMobilePerformance();
+  const { dpr, shadows, isTouch } = useMobilePerformance();
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { margin: "100px" });
   return (
-    <section id="services" className="relative min-h-screen py-24 bg-[#050505]/80 overflow-hidden flex items-center border-t border-white/5">
+    <section id="services" ref={sectionRef} className="relative min-h-screen py-24 bg-[#050505]/80 overflow-hidden flex items-center border-t border-white/5">
       <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
         {/* Left Column: Static Content */}
@@ -130,9 +133,11 @@ export default function ServicesSection() {
             transition={{ duration: 1.2, ease: "easeOut" }}
             className="w-full h-full absolute inset-0 md:-right-24"
           >
-            <Canvas camera={{ position: [3.5, 2.0, 3.5], fov: 28 }} shadows={shadows} dpr={dpr} className="w-full h-full outline-none">
-              <WorkspaceModel />
-            </Canvas>
+            {isInView && (
+              <Canvas camera={{ position: [3.5, 2.0, 3.5], fov: 28 }} shadows={shadows} dpr={dpr} className="w-full h-full outline-none">
+                <WorkspaceModel />
+              </Canvas>
+            )}
           </motion.div>
         </div>
 

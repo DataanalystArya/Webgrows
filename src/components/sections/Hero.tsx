@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, useInView } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import HeroModel from "@/components/3d/HeroModel";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
@@ -15,7 +15,9 @@ const FLOATING_BADGES = [
 ];
 
 export default function HeroSection() {
-  const { dpr, shadows } = useMobilePerformance();
+  const { dpr, shadows, isTouch } = useMobilePerformance();
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { margin: "100px" });
   const mousePointer = useRef({ x: 0, y: 0 });
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -30,6 +32,7 @@ export default function HeroSection() {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      if (isTouch) return;
       // 3D Model Coordinates (-1 to 1)
       mousePointer.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mousePointer.current.y = (e.clientY / window.innerHeight) * 2 - 1;
@@ -44,7 +47,7 @@ export default function HeroSection() {
   }, [mouseX, mouseY]);
 
   return (
-    <section id="home" className="relative min-h-[100vh] flex items-center overflow-hidden bg-[#050505]/80 pt-24 lg:pt-0 perspective-1000">
+    <section id="home" ref={sectionRef} className="relative min-h-[100vh] flex items-center overflow-hidden bg-[#050505]/80 pt-24 lg:pt-0 perspective-1000">
       {/* Scan-line overlay */}
       <div className="scanline-overlay pointer-events-none" />
 
@@ -147,9 +150,11 @@ export default function HeroSection() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 1.2, ease: [0.2, 0, 0, 1] }}
         >
-          <Canvas camera={{ position: [0, 1.5, 5], fov: 40 }} gl={{ alpha: true }} dpr={dpr} shadows={shadows}>
-            <HeroModel mousePointer={mousePointer} />
-          </Canvas>
+          {isInView && (
+            <Canvas camera={{ position: [0, 1.5, 5], fov: 40 }} gl={{ alpha: true }} dpr={dpr} shadows={shadows}>
+              <HeroModel mousePointer={mousePointer} />
+            </Canvas>
+          )}
         </motion.div>
         
       </div>

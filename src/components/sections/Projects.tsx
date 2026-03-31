@@ -3,6 +3,7 @@
 import { useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 const PROJECTS = [
   {
@@ -50,6 +51,7 @@ const PROJECTS = [
 ];
 
 function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: number }) {
+  const { isTouch } = useMobilePerformance();
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = useCallback(() => {
@@ -58,7 +60,7 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || isTouch) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;

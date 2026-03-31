@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 interface Particle {
   x: number;
@@ -14,18 +15,16 @@ interface Particle {
 }
 
 export default function ParticleField() {
+  const { particleCount, lowPower } = useMobilePerformance();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const animFrameRef = useRef<number>(0);
 
   const initParticles = useCallback((width: number, height: number) => {
-    // Fewer particles on mobile for performance
-    const isMobile = width < 768;
-    const count = isMobile ? 40 : 80;
     const particles: Particle[] = [];
     
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
@@ -38,7 +37,7 @@ export default function ParticleField() {
       });
     }
     particlesRef.current = particles;
-  }, []);
+  }, [particleCount]);
 
   useEffect(() => {
     // Respect reduced motion preference
@@ -54,9 +53,7 @@ export default function ParticleField() {
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      if (particlesRef.current.length === 0) {
-        initParticles(canvas.width, canvas.height);
-      }
+      initParticles(canvas.width, canvas.height);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -109,23 +106,25 @@ export default function ParticleField() {
         ctx.fill();
       }
 
-      // Draw subtle connection lines between nearby particles
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const a = particlesRef.current[i];
-          const b = particlesRef.current[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist < 120) {
-            const lineOpacity = (1 - dist / 120) * 0.06;
-            ctx.beginPath();
-            ctx.moveTo(a.x + mx * a.size * 8, a.y + my * a.size * 8);
-            ctx.lineTo(b.x + mx * b.size * 8, b.y + my * b.size * 8);
-            ctx.strokeStyle = `rgba(139, 92, 246, ${lineOpacity})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+      // Draw subtle connection lines between nearby particles - DISABLED ON MOBILE
+      if (!lowPower) {
+        for (let i = 0; i < particlesRef.current.length; i++) {
+          for (let j = i + 1; j < particlesRef.current.length; j++) {
+            const a = particlesRef.current[i];
+            const b = particlesRef.current[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            if (dist < 120) {
+              const lineOpacity = (1 - dist / 120) * 0.06;
+              ctx.beginPath();
+              ctx.moveTo(a.x + mx * a.size * 8, a.y + my * a.size * 8);
+              ctx.lineTo(b.x + mx * b.size * 8, b.y + my * b.size * 8);
+              ctx.strokeStyle = `rgba(139, 92, 246, ${lineOpacity})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
           }
         }
       }
@@ -140,7 +139,7 @@ export default function ParticleField() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [initParticles]);
+  }, [initParticles, lowPower]);
 
   return (
     <canvas

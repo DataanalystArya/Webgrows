@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useCallback } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import * as THREE from "three";
@@ -115,8 +115,9 @@ function OrbitingRings() {
 }
 
 export default function AboutSection() {
-  const { dpr, shadows } = useMobilePerformance();
+  const { dpr, shadows, isTouch } = useMobilePerformance();
   const containerRef = useRef<HTMLElement>(null);
+  const isInView = useInView(containerRef, { margin: "200px" });
   const cardRef = useRef<HTMLDivElement>(null);
   
   const { scrollYProgress } = useScroll({
@@ -135,7 +136,7 @@ export default function AboutSection() {
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || isTouch) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -164,9 +165,11 @@ export default function AboutSection() {
           style={{ opacity: modelOpacity, scale: modelScale }}
           className="relative h-[400px] md:h-[500px] lg:h-[600px] w-full flex items-center justify-center order-2 lg:order-1 overflow-visible"
         >
-          <Canvas camera={{ position: [0, 0, 5.5], fov: 45 }} className="overflow-visible" dpr={dpr} shadows={shadows}>
-            <OrbitingRings />
-          </Canvas>
+          {isInView && (
+            <Canvas camera={{ position: [0, 0, 5.5], fov: 45 }} className="overflow-visible" dpr={dpr} shadows={shadows}>
+              <OrbitingRings />
+            </Canvas>
+          )}
         </motion.div>
 
         {/* Right Side Content */}

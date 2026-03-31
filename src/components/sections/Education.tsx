@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import { useRef, useCallback } from "react";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 export default function EducationSection() {
+  const { isTouch } = useMobilePerformance();
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = useCallback(() => {
@@ -12,7 +14,7 @@ export default function EducationSection() {
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || isTouch) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;

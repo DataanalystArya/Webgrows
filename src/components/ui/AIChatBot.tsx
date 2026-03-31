@@ -2,14 +2,14 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  Send, 
-  X, 
-  MessageSquare, 
-  ChevronUp, 
-  MessageCircle, 
-  Phone, 
+import {
+  Search,
+  Send,
+  X,
+  MessageSquare,
+  ChevronUp,
+  MessageCircle,
+  Phone,
   ArrowRight,
   Sparkles
 } from "lucide-react";
@@ -101,13 +101,13 @@ export default function AIChatBot() {
     <>
       {/* 1. Sticky Search Bar / Toggle */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-lg px-6 pointer-events-none">
-        <motion.div 
+        <motion.div
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="pointer-events-auto"
         >
-          <div 
-            onClick={() => { if(!isOpen) setIsOpen(true); }}
+          <div
+            onClick={() => { if (!isOpen) setIsOpen(true); }}
             className={`
               relative flex items-center bg-black/60 backdrop-blur-xl border border-white/10 rounded-full px-4 py-3 cursor-pointer
               shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all hover:border-purple-500/50 group
@@ -145,7 +145,7 @@ export default function AIChatBot() {
                     <p className="text-[10px] text-purple-400 uppercase tracking-widest font-bold">Online Assistant</p>
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={() => setIsOpen(false)}
                   className="p-2 rounded-full hover:bg-white/5 text-neutral-400 transition-colors"
                 >
@@ -154,7 +154,7 @@ export default function AIChatBot() {
               </div>
 
               {/* Chat Viewport */}
-              <div 
+              <div
                 ref={scrollRef}
                 className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide"
               >
@@ -167,12 +167,12 @@ export default function AIChatBot() {
                   >
                     <div className={`
                       max-w-[85%] rounded-2xl px-4 py-3 text-sm
-                      ${msg.type === "user" 
-                        ? "bg-purple-600 text-white rounded-tr-none shadow-lg shadow-purple-600/20" 
+                      ${msg.type === "user"
+                        ? "bg-purple-600 text-white rounded-tr-none shadow-lg shadow-purple-600/20"
                         : "bg-white/5 text-neutral-200 border border-white/10 rounded-tl-none"}
                     `}>
                       <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
-                      
+
                       {/* Interaction Options */}
                       {msg.options && (
                         <div className="flex flex-wrap gap-2 mt-4">
@@ -191,14 +191,14 @@ export default function AIChatBot() {
                       {/* CTA Buttons */}
                       {msg.cta && (
                         <div className="flex flex-col gap-2 mt-4">
-                          <a 
-                            href="https://wa.me/919351469466" 
+                          <a
+                            href="https://wa.me/919351469466"
                             target="_blank"
                             className="flex items-center justify-center gap-2 w-full py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-xl text-xs font-bold hover:bg-green-500/30 transition-all"
                           >
                             <MessageSquare className="w-4 h-4" /> WhatsApp Now
                           </a>
-                          <button 
+                          <button
                             onClick={() => handleSend("Tell me more about services")}
                             className="flex items-center justify-center gap-2 w-full py-2 bg-white/10 text-white border border-white/10 rounded-xl text-xs font-bold hover:bg-white/20 transition-all"
                           >
@@ -223,15 +223,15 @@ export default function AIChatBot() {
               {/* Input Area */}
               <div className="p-4 bg-white/[0.02] border-t border-white/5">
                 <div className="relative flex items-center">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={(e) => e.key === "Enter" && handleSend(inputValue)}
                     placeholder="Type a message..."
                     className="w-full bg-white/5 border border-white/10 rounded-2xl pl-5 pr-12 py-3 text-sm text-white focus:outline-none focus:border-purple-500/50 transition-all placeholder:text-neutral-600"
                   />
-                  <button 
+                  <button
                     onClick={() => handleSend(inputValue)}
                     className="absolute right-2 p-2 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-xl text-white shadow-lg shadow-purple-600/30 hover:scale-105 active:scale-95 transition-all"
                   >

@@ -1,7 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { Suspense, useRef } from "react";
+import { useInView } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
@@ -21,9 +22,12 @@ function LoadingFallback() {
 }
 
 export default function SkillsSection() {
-  const { dpr, shadows } = useMobilePerformance();
+  const { dpr, shadows, isTouch } = useMobilePerformance();
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { margin: "100px" });
+
   return (
-    <section id="skills" className="relative h-screen bg-[#050505] overflow-hidden flex items-center justify-center">
+    <section id="skills" ref={sectionRef} className="relative h-screen bg-[#050505] overflow-hidden flex items-center justify-center">
       
       {/* Text Overlay */}
       <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center p-6 text-center">
@@ -38,23 +42,25 @@ export default function SkillsSection() {
       {/* 3D Physics Canvas */}
       <div className="w-full h-full cursor-none">
         <Suspense fallback={<LoadingFallback />}>
-          <Canvas
-            camera={{ position: [0, 0, 20], fov: 35 }}
-            dpr={dpr}
-            shadows={shadows}
-            gl={{ alpha: true, antialias: true }}
-            style={{ background: "#050505" }}
-          >
-            <color attach="background" args={["#050505"]} />
-            <SkillBallsScene />
-            <EffectComposer>
-              <N8AO
-                distanceFalloff={1}
-                aoRadius={1}
-                intensity={4}
-              />
-            </EffectComposer>
-          </Canvas>
+          {isInView && (
+            <Canvas
+              camera={{ position: [0, 0, 20], fov: 35 }}
+              dpr={dpr}
+              shadows={shadows}
+              gl={{ alpha: true, antialias: true }}
+              style={{ background: "#050505" }}
+            >
+              <color attach="background" args={["#050505"]} />
+              <SkillBallsScene />
+              <EffectComposer>
+                <N8AO
+                  distanceFalloff={1}
+                  aoRadius={1}
+                  intensity={4}
+                />
+              </EffectComposer>
+            </Canvas>
+          )}
         </Suspense>
       </div>
       
