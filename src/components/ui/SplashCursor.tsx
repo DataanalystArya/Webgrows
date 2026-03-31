@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 export default function SplashCursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { isMobile } = useMobilePerformance();
 
   useEffect(() => {
+    // If on mobile device, skip initializing the 2D canvas entirely to save huge perf overhead.
+    if (isMobile) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -158,7 +163,9 @@ export default function SplashCursor() {
       cancelAnimationFrame(animId);
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [isMobile]);
+
+  if (isMobile) return null;
 
   return (
     <canvas

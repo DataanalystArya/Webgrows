@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 // Dynamically import the scene to avoid SSR issues with Three.js/Rapier
 const SkillBallsScene = dynamic(
@@ -20,6 +21,7 @@ function LoadingFallback() {
 }
 
 export default function SkillsSection() {
+  const { dpr, shadows } = useMobilePerformance();
   return (
     <section id="skills" className="relative h-screen bg-[#050505] overflow-hidden flex items-center justify-center">
       
@@ -38,7 +40,8 @@ export default function SkillsSection() {
         <Suspense fallback={<LoadingFallback />}>
           <Canvas
             camera={{ position: [0, 0, 20], fov: 35 }}
-            dpr={[1, 1.5]}
+            dpr={dpr}
+            shadows={shadows}
             gl={{ alpha: true, antialias: true }}
             style={{ background: "#050505" }}
           >

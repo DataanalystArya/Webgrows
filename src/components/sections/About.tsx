@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import * as THREE from "three";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 /* ─── Orbiting Ring System ─── */
 function OrbitingRings() {
@@ -114,6 +115,7 @@ function OrbitingRings() {
 }
 
 export default function AboutSection() {
+  const { dpr, shadows } = useMobilePerformance();
   const containerRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   
@@ -162,7 +164,7 @@ export default function AboutSection() {
           style={{ opacity: modelOpacity, scale: modelScale }}
           className="relative h-[400px] md:h-[500px] lg:h-[600px] w-full flex items-center justify-center order-2 lg:order-1 overflow-visible"
         >
-          <Canvas camera={{ position: [0, 0, 5.5], fov: 45 }} className="overflow-visible">
+          <Canvas camera={{ position: [0, 0, 5.5], fov: 45 }} className="overflow-visible" dpr={dpr} shadows={shadows}>
             <OrbitingRings />
           </Canvas>
         </motion.div>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useCallback } from "react";
 import * as THREE from "three";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 /* ─── Animated Wireframe Globe ─── */
 function WireframeGlobe() {
@@ -58,6 +59,7 @@ function WireframeGlobe() {
 }
 
 export default function ContactSection() {
+  const { dpr, shadows } = useMobilePerformance();
   const formRef = useRef<HTMLDivElement>(null);
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -102,7 +104,7 @@ export default function ContactSection() {
       
       {/* 3D Wireframe Globe Background */}
       <div className="absolute inset-0 opacity-40 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
+        <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={dpr} shadows={shadows}>
           <WireframeGlobe />
         </Canvas>
       </div>

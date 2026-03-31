@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import HeroModel from "@/components/3d/HeroModel";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 const FLOATING_BADGES = [
   { label: "Next.js", x: "10%", y: "20%", delay: 0 },
@@ -14,6 +15,7 @@ const FLOATING_BADGES = [
 ];
 
 export default function HeroSection() {
+  const { dpr, shadows } = useMobilePerformance();
   const mousePointer = useRef({ x: 0, y: 0 });
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -145,7 +147,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 1.2, ease: [0.2, 0, 0, 1] }}
         >
-          <Canvas camera={{ position: [0, 1.5, 5], fov: 40 }} gl={{ alpha: true }}>
+          <Canvas camera={{ position: [0, 1.5, 5], fov: 40 }} gl={{ alpha: true }} dpr={dpr} shadows={shadows}>
             <HeroModel mousePointer={mousePointer} />
           </Canvas>
         </motion.div>

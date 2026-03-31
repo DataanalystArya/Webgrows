@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { useRef, useCallback } from "react";
 import WorkspaceModel from "@/components/3d/HighFidelityWorkspace";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 const SERVICES = [
   { name: "Business Website Development", desc: "Modern, fast, and SEO-optimized websites" },
@@ -91,6 +92,7 @@ function ServiceCard({ service, index }: { service: typeof SERVICES[0]; index: n
 }
 
 export default function ServicesSection() {
+  const { dpr, shadows } = useMobilePerformance();
   return (
     <section id="services" className="relative min-h-screen py-24 bg-[#050505]/80 overflow-hidden flex items-center border-t border-white/5">
       <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -128,7 +130,7 @@ export default function ServicesSection() {
             transition={{ duration: 1.2, ease: "easeOut" }}
             className="w-full h-full absolute inset-0 md:-right-24"
           >
-            <Canvas camera={{ position: [3.5, 2.0, 3.5], fov: 28 }} shadows className="w-full h-full outline-none">
+            <Canvas camera={{ position: [3.5, 2.0, 3.5], fov: 28 }} shadows={shadows} dpr={dpr} className="w-full h-full outline-none">
               <WorkspaceModel />
             </Canvas>
           </motion.div>
