@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ParticleField from "@/components/3d/ParticleField";
+import SplashCursor from "@/components/ui/SplashCursor";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,10 +29,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-white/20`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-white/20 cursor-none`}
       >
+        <SplashCursor />
+        <ParticleField />
         <Navbar />
-        <main className="min-h-screen">
+        <main className="min-h-screen relative z-[1]">
           {children}
         </main>
         <Footer />
