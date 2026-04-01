@@ -10,6 +10,7 @@ import {
 } from "@react-three/rapier";
 import { Environment } from "@react-three/drei";
 import * as THREE from "three";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 /* ─── Config ─── */
 const BALL_COUNT = 48;
@@ -111,9 +112,11 @@ function Pointer() {
 function Sphere({
   position,
   tech,
+  lowPower,
 }: {
   position: [number, number, number];
   tech: { label: string; bg: string; fg: string };
+  lowPower: boolean;
 }) {
   const api = useRef<RapierRigidBody>(null);
   const scale = useMemo(() => 0.6 + Math.random() * 0.5, []);
@@ -151,8 +154,8 @@ function Sphere({
       mass={scale}
     >
       <BallCollider args={[scale * 0.9]} />
-      <mesh scale={scale} castShadow>
-        <sphereGeometry args={[1, 48, 48]} />
+      <mesh scale={scale} castShadow={!lowPower}>
+        <sphereGeometry args={[1, lowPower ? 24 : 48, lowPower ? 24 : 48]} />
         <meshPhysicalMaterial
           map={texture}
           roughness={0.15}
@@ -170,6 +173,7 @@ function Sphere({
 
 /* ─── Main Scene Export ─── */
 export default function SkillBallsScene() {
+  const { lowPower } = useMobilePerformance();
   // Generate deterministic initial positions spread around center
   const spheres = useMemo(() => {
     const result = [];
@@ -191,14 +195,14 @@ export default function SkillBallsScene() {
     <Physics gravity={[0, 0, 0]}>
       <Environment preset="city" />
       <ambientLight intensity={0.3} />
-      <directionalLight position={[10, 10, 5]} intensity={0.8} color="#ffffff" />
+      <directionalLight position={[10, 10, 5]} intensity={0.8} color="#ffffff" castShadow={!lowPower} />
       <directionalLight position={[-10, -5, 5]} intensity={0.3} color="#60a5fa" />
       <pointLight position={[0, 0, 10]} intensity={0.5} color="#00ffcc" distance={30} />
 
       <Pointer />
 
       {spheres.map((s) => (
-        <Sphere key={s.id} position={s.position} tech={s.tech} />
+        <Sphere key={s.id} position={s.position} tech={s.tech} lowPower={lowPower} />
       ))}
     </Physics>
   );

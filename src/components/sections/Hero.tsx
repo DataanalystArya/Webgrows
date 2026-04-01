@@ -70,7 +70,7 @@ export default function HeroSection() {
             />
             <div 
               className="w-full h-full absolute inset-0 opacity-60 mix-blend-screen"
-              dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/MOrN1CeLkZ5BVHIa/scene.splinecode" class="w-full h-full"></spline-viewer>` }} 
+              dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/MOrN1CeLkZ5BVHIa/scene.splinecode" class="w-full h-full" loading="lazy"></spline-viewer>` }} 
             />
           </>
         )}

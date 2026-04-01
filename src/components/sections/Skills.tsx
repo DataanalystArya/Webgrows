@@ -47,7 +47,11 @@ export default function SkillsSection() {
               camera={{ position: [0, 0, 20], fov: 35 }}
               dpr={dpr}
               shadows={shadows}
-              gl={{ alpha: true, antialias: true }}
+              gl={{ 
+                alpha: true, 
+                antialias: !isTouch, // Disable antialias on mobile for massive perf gain
+                powerPreference: "high-performance" // Prioritize GPU
+              }}
               style={{ background: "#050505" }}
             >
               <color attach="background" args={["#050505"]} />

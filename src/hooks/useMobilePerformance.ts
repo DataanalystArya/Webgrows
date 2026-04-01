@@ -24,7 +24,7 @@ export function useMobilePerformance() {
     dpr: isMobile || isTouch ? (1.0 as number) : (1.25 as number),
     shadows: !isMobile && !isTouch,
     // Fewer particles = less CPU/GPU strain
-    particleCount: isMobile ? 12 : isTouch ? 24 : 45,
+    particleCount: isMobile ? 8 : isTouch ? 24 : 45,
     // Disable heavy effects like connections and bloom on mobile
     lowPower: isMobile || isTouch,
     // Faster animations on desktop, simpler on mobile

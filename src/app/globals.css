@@ -175,10 +175,12 @@ body {
 
 .marquee-left {
   animation: marquee-left 30s linear infinite;
+  will-change: transform;
 }
 
 .marquee-right {
   animation: marquee-right 30s linear infinite;
+  will-change: transform;
 }
 
 .marquee-left:hover,

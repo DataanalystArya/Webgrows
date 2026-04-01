@@ -3,6 +3,7 @@
 import { useRef, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
+import Script from "next/script";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 const SplineWorkspace = dynamic(() => import("@/components/3d/SplineWorkspace"), { ssr: false });
@@ -106,6 +107,11 @@ export default function ServicesSection() {
   const isInView = useInView(sectionRef, { margin: "100px" });
   return (
     <section id="services" ref={sectionRef} className="relative min-h-screen py-24 bg-transparent overflow-hidden flex items-center border-t border-white/5 z-10">
+      <Script 
+        src="https://unpkg.com/@splinetool/viewer@1.12.73/build/spline-viewer.js" 
+        type="module"
+        strategy="afterInteractive"
+      />
       <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
         {/* Left Column: Static Content */}

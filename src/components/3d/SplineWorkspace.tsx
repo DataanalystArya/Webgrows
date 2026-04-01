@@ -19,17 +19,23 @@ export default function SplineWorkspace() {
       {/* Container for the spline viewer with some glow effects */}
       <div className="absolute inset-0 bg-purple-500/5 blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none z-[2]" />
       
-      {/* 
-        CLIPPING HACK:
-        The "Built with Spline" logo is in the bottom-right corner.
-        By making the viewer 50px taller than its container and using overflow-hidden, 
-        the bottom area (where the logo sits) is clipped out of view.
-      */}
-      <div className="absolute inset-0 bottom-[-50px]">
-        <Spline 
-          scene="https://prod.spline.design/vVsO7-0RRvAv7sWb/scene.splinecode"
-          className="w-full h-full pointer-events-none"
+      <div 
+        className="absolute inset-0 w-full h-full"
+        style={{ 
+          mixBlendMode: "screen",
+          transform: "scale(1.15)",
+          transformOrigin: "center center",
+          clipPath: "inset(0 0 45px 0)",
+          WebkitMaskImage: "radial-gradient(circle at center, black 40%, transparent 80%)",
+          maskImage: "radial-gradient(circle at center, black 40%, transparent 80%)",
+        }}
+      >
+        <div className="absolute inset-0 bottom-[-50px]">
+        <div 
+          className="w-full h-full"
+          dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/vVsO7-0RRvAv7sWb/scene.splinecode" class="w-full h-full" loading="lazy"></spline-viewer>` }} 
         />
+      </div>
       </div>
       
       {/* Overlay to catch mouse events if needed, but Spline handles its own */}

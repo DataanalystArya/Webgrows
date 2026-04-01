@@ -33,9 +33,9 @@ export default function SplineAbout() {
           maskImage: "radial-gradient(circle at center, black 40%, transparent 80%)",
         }}
       >
-        <Spline 
-          scene="https://prod.spline.design/mAfb25evdOyzh4Es/scene.splinecode"
-          className="w-full h-full bg-transparent"
+        <div 
+          className="w-full h-full"
+          dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/mAfb25evdOyzh4Es/scene.splinecode" class="w-full h-full" loading="lazy"></spline-viewer>` }} 
         />
       </div>
     </div>

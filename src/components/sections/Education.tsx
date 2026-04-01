@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useCallback } from "react";
+import Script from "next/script";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 export default function EducationSection() {
@@ -44,12 +45,9 @@ export default function EducationSection() {
           className="absolute inset-0 z-0 w-full h-full pointer-events-none opacity-60 mix-blend-screen"
           style={{ clipPath: "inset(0 0 50px 0)" }}
         >
-          <iframe 
-            src="https://my.spline.design/ailandingpagewebdesign3danimation-3O7QCYofBePoW7i6owf1xa4i/" 
-            frameBorder="0" 
-            width="100%" 
-            height="100%" 
-            style={{ border: "none" }}
+          <div 
+            className="w-full h-full"
+            dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/ailandingpagewebdesign3danimation-3O7QCYofBePoW7i6owf1xa4i/" class="w-full h-full" loading="lazy"></spline-viewer>` }} 
           />
         </div>
       )}

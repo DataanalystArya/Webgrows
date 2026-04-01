@@ -51,7 +51,7 @@ export default function TechStackSection() {
 
       {/* Marquee Row 1 — scrolls left */}
       <motion.div 
-        className="relative mb-4"
+        className="relative mb-4 will-change-transform"
         initial={{ opacity: 0, x: -100 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
@@ -70,7 +70,7 @@ export default function TechStackSection() {
 
       {/* Marquee Row 2 — scrolls right */}
       <motion.div 
-        className="relative"
+        className="relative will-change-transform"
         initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
