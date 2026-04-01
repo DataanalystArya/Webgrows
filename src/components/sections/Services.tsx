@@ -138,24 +138,28 @@ export default function ServicesSection() {
           </div>
         </div>
 
-        {/* Right Column: 3D Scene — Disabled on mobile */}
-        {!isMobile && (
-          <div className="h-[400px] md:h-[500px] lg:h-[700px] w-full relative perspective-1000 -mx-4 md:mx-0">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, rotateY: -5 }}
-              whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-              className="w-full h-full absolute inset-0 md:-right-24"
-            >
-              {isInView && (
-                <div className="w-full h-full outline-none pointer-events-auto">
+        {/* Right Column: 3D Scene — Re-enabled for mobile with performance shields */}
+        <div className="h-[350px] sm:h-[450px] md:h-[500px] lg:h-[700px] w-full relative perspective-1000 -mx-4 md:mx-0">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, rotateY: -5 }}
+            whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="w-full h-full absolute inset-0 md:-right-24"
+          >
+            {isInView && (
+              <div className="w-full h-full outline-none pointer-events-auto">
+                <div style={{ 
+                  transform: isMobile ? "scale(0.85) translateY(-10px)" : "none",
+                  transformOrigin: "center center",
+                  height: "100%"
+                }}>
                   <SplineWorkspace />
                 </div>
-              )}
-            </motion.div>
-          </div>
-        )}
+              </div>
+            )}
+          </motion.div>
+        </div>
 
       </div>
     </section>

@@ -57,15 +57,13 @@ export default function SkillsSection() {
             >
               <color attach="background" args={["#050505"]} />
               <SkillBallsScene />
-              {!isMobile && (
-                <EffectComposer>
-                  <N8AO
-                    distanceFalloff={1}
-                    aoRadius={1}
-                    intensity={4}
-                  />
-                </EffectComposer>
-              )}
+              <EffectComposer>
+                <N8AO
+                  distanceFalloff={1}
+                  aoRadius={1}
+                  intensity={isMobile ? 2 : 4}
+                />
+              </EffectComposer>
             </Canvas>
           )}
         </Suspense>

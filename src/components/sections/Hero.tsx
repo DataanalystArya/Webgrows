@@ -143,7 +143,7 @@ export default function HeroSection() {
             </motion.p>
             
             <motion.div 
-              className="flex flex-wrap justify-center lg:justify-start gap-6 mb-12 lg:mb-0 preserve-3d"
+              className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 sm:gap-6 mb-12 lg:mb-0 preserve-3d w-full sm:w-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.8 }}
@@ -152,18 +152,18 @@ export default function HeroSection() {
                 href="#contact"
                 whileHover={{ scale: 1.05, y: -5, rotateX: 5 }}
                 whileTap={{ scale: 0.95 }}
-                className="shimmer-btn px-8 md:px-10 py-4 text-black font-bold rounded-full text-lg shadow-[0_10px_30px_rgba(255,255,255,0.1)] hover:shadow-[0_20px_40px_rgba(255,255,255,0.2)] transition-shadow"
+                className="shimmer-btn px-8 md:px-10 py-4 text-black font-bold rounded-full text-lg shadow-[0_10px_30px_rgba(255,255,255,0.1)] hover:shadow-[0_20px_40px_rgba(255,255,255,0.2)] transition-shadow text-center w-full sm:w-auto"
                 style={{ transform: "translateZ(30px)" }}
               >
                 Start a Project
               </motion.a>
-              <div className="relative group perspective-1000 preserve-3d">
+              <div className="relative group perspective-1000 preserve-3d w-full sm:w-auto">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-indigo-400 rounded-full blur opacity-30 group-hover:opacity-70 transition duration-500" />
                 <motion.a
                   href="#projects"
                   whileHover={{ scale: 1.05, y: -5, rotateX: 5 }}
                   whileTap={{ scale: 0.95 }}
-                  className="relative px-8 md:px-10 py-4 bg-black border border-white/20 text-white font-bold rounded-full hover:bg-[#0a0a0a] transition-all flex items-center justify-center text-lg hover:border-purple-500/50"
+                  className="relative px-8 md:px-10 py-4 bg-black border border-white/20 text-white font-bold rounded-full hover:bg-[#0a0a0a] transition-all flex items-center justify-center text-lg hover:border-purple-500/50 w-full sm:w-auto"
                   style={{ transform: "translateZ(20px)" }}
                 >
                   View Projects
@@ -173,29 +173,27 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* Right Side 3D Robot Model */}
+        {/* Right Side 3D Robot Model — Framing Optimization */}
         <motion.div 
-          className="pointer-events-none w-full h-[350px] md:h-[500px] lg:h-[650px] lg:w-[45%] relative flex items-center justify-center mt-8 lg:mt-0"
+          className="pointer-events-none w-full h-[300px] sm:h-[450px] md:h-[500px] lg:h-[650px] lg:w-[45%] relative flex items-center justify-center mt-8 lg:mt-0"
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 1.2, ease: [0.2, 0, 0, 1] }}
         >
           {isInView && isMounted && (
-            <>
-              <div 
-                className="absolute inset-0 w-full h-full"
-                style={{ 
-                  transform: "scale(1.1)", // Increase scale slightly to match visual weight
-                  transformOrigin: "center center",
-                  clipPath: "inset(0 0 50px 0)" // clip out bottom watermark if any
-                }}
-              >
-                <Spline 
-                  scene="https://prod.spline.design/55SNHUwzLMmzhrVn/scene.splinecode"
-                  className="w-full h-full bg-transparent"
-                />
-              </div>
-            </>
+            <div 
+              className="absolute inset-0 w-full h-full"
+              style={{ 
+                transform: isMobile ? "scale(1.2) translateY(-20px)" : "scale(1.1)", // Focused view on mobile
+                transformOrigin: "center center",
+                clipPath: "inset(0 0 50px 0)"
+              }}
+            >
+              <Spline 
+                scene="https://prod.spline.design/55SNHUwzLMmzhrVn/scene.splinecode"
+                className="w-full h-full bg-transparent"
+              />
+            </div>
           )}
         </motion.div>
         
