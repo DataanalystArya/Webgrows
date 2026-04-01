@@ -2,117 +2,10 @@
 
 import { useRef, useCallback } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
-import * as THREE from "three";
+import dynamic from "next/dynamic";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
-/* ─── Orbiting Ring System ─── */
-function OrbitingRings() {
-  const groupRef = useRef<THREE.Group>(null);
-  const ring1Ref = useRef<THREE.Mesh>(null);
-  const ring2Ref = useRef<THREE.Mesh>(null);
-  const ring3Ref = useRef<THREE.Mesh>(null);
-  const coreRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (groupRef.current) {
-      groupRef.current.rotation.y = t * 0.15;
-    }
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.x = t * 0.5;
-      ring1Ref.current.rotation.z = t * 0.2;
-    }
-    if (ring2Ref.current) {
-      ring2Ref.current.rotation.x = t * 0.3 + 1;
-      ring2Ref.current.rotation.y = t * 0.4;
-    }
-    if (ring3Ref.current) {
-      ring3Ref.current.rotation.y = t * 0.6;
-      ring3Ref.current.rotation.z = t * 0.25 + 2;
-    }
-    if (coreRef.current) {
-      coreRef.current.scale.setScalar(1 + Math.sin(t * 2) * 0.05);
-    }
-  });
-
-  return (
-    <group ref={groupRef} scale={0.85}>
-      <Environment preset="city" />
-      <ambientLight intensity={0.3} />
-      <pointLight position={[0, 0, 0]} intensity={2} color="#8b5cf6" distance={8} />
-      
-      {/* Glowing Core */}
-      <mesh ref={coreRef}>
-        <sphereGeometry args={[0.3, 32, 32]} />
-        <meshStandardMaterial 
-          color="#8b5cf6" 
-          emissive="#8b5cf6" 
-          emissiveIntensity={3} 
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* Ring 1 */}
-      <mesh ref={ring1Ref}>
-        <torusGeometry args={[1.2, 0.02, 16, 100]} />
-        <meshPhysicalMaterial 
-          color="#6366f1" 
-          emissive="#6366f1" 
-          emissiveIntensity={1.5} 
-          metalness={0.9} 
-          roughness={0.1}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* Ring 2 */}
-      <mesh ref={ring2Ref} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[1.6, 0.015, 16, 100]} />
-        <meshPhysicalMaterial 
-          color="#a855f7" 
-          emissive="#a855f7" 
-          emissiveIntensity={1} 
-          metalness={0.9} 
-          roughness={0.1}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* Ring 3 */}
-      <mesh ref={ring3Ref} rotation={[Math.PI / 6, Math.PI / 4, 0]}>
-        <torusGeometry args={[2.0, 0.01, 16, 100]} />
-        <meshPhysicalMaterial 
-          color="#ec4899" 
-          emissive="#ec4899" 
-          emissiveIntensity={0.8} 
-          metalness={0.9}
-          roughness={0.1}
-          transparent
-          opacity={0.7}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* Orbiting particles */}
-      {[...Array(8)].map((_, i) => {
-        const angle = (i / 8) * Math.PI * 2;
-        return (
-          <mesh key={i} position={[Math.cos(angle) * 1.4, Math.sin(angle) * 1.4, 0]}>
-            <sphereGeometry args={[0.04, 16, 16]} />
-            <meshStandardMaterial 
-              color="#6366f1" 
-              emissive="#6366f1" 
-              emissiveIntensity={3}
-              toneMapped={false}
-            />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-}
+const SplineAbout = dynamic(() => import("@/components/3d/SplineAbout"), { ssr: false });
 
 export default function AboutSection() {
   const { dpr, shadows, isTouch } = useMobilePerformance();
@@ -135,20 +28,31 @@ export default function AboutSection() {
     cardRef.current.style.transition = "none";
   }, []);
 
+  const requestRef = useRef<number | null>(null);
+
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current || isTouch) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
     
-    // Calculate rotation (-4 to 4 degrees for a subtle luxurious effect)
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -4;
-    const rotateY = ((x - centerX) / centerX) * 4;
+    // Throttle layout reflows with rAF to prevent stalling the main thread during WebGL draws
+    if (requestRef.current !== null) {
+      cancelAnimationFrame(requestRef.current);
+    }
+    
+    requestRef.current = requestAnimationFrame(() => {
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Calculate rotation (-4 to 4 degrees for a subtle luxurious effect)
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -4;
+      const rotateY = ((x - centerX) / centerX) * 4;
 
-    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-  }, []);
+      cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+  }, [isTouch]);
 
   const handleMouseLeave = useCallback(() => {
     if (!cardRef.current) return;
@@ -158,17 +62,17 @@ export default function AboutSection() {
   
   return (
     <section id="about" ref={containerRef} className="relative min-h-screen py-24 flex items-center bg-[#0a0a0a]/80 overflow-visible">
-      <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center perspective-1000">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 lg:gap-24 items-center perspective-1000">
         
-        {/* Left Side — 3D Orbiting Rings */}
+        {/* Left Side — Wide-Angle Expanded 3D Gallery */}
         <motion.div 
           style={{ opacity: modelOpacity, scale: modelScale }}
-          className="relative h-[400px] md:h-[500px] lg:h-[600px] w-full flex items-center justify-center order-2 lg:order-1 overflow-visible"
+          className="relative h-[500px] md:h-[700px] lg:h-[850px] w-full flex items-center justify-center order-2 lg:order-1 overflow-visible pointer-events-auto"
         >
           {isInView && (
-            <Canvas camera={{ position: [0, 0, 5.5], fov: 45 }} className="overflow-visible" dpr={dpr} shadows={shadows}>
-              <OrbitingRings />
-            </Canvas>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] lg:w-[140%] lg:h-[120%]">
+              <SplineAbout />
+            </div>
           )}
         </motion.div>
 

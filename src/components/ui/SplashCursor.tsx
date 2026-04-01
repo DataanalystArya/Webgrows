@@ -35,6 +35,19 @@ export default function SplashCursor() {
     const mouse = { x: width / 2, y: height / 2, vx: 0, vy: 0 };
     let isMoving = false;
     let timeoutId: NodeJS.Timeout;
+    let animId: number;
+    let isAnimating = true;
+    let isTabVisible = true;
+
+    const handleVisibilityChange = () => {
+      isTabVisible = !document.hidden;
+      if (isTabVisible && !isAnimating) {
+        isAnimating = true;
+        animate();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     const handleMouseMove = (e: MouseEvent) => {
       mouse.vx = e.clientX - mouse.x;
@@ -42,6 +55,12 @@ export default function SplashCursor() {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       isMoving = true;
+
+      // Restart animation if it's paused
+      if (!isAnimating) {
+        isAnimating = true;
+        animate();
+      }
 
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
@@ -127,8 +146,13 @@ export default function SplashCursor() {
     }
 
     // Main animation loop
-    let animId: number;
     const animate = () => {
+      // Pause drawing if mouse is idle and no particles are alive, or tab is hidden
+      if (!isTabVisible || (!isMoving && particles.length === 0)) {
+        isAnimating = false;
+        return; // Halt requestAnimationFrame
+      }
+
       // Clear with fading trail
       ctx.fillStyle = "rgba(5, 5, 5, 0.2)";
       ctx.fillRect(0, 0, width, height);

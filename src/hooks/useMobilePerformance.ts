@@ -20,12 +20,14 @@ export function useMobilePerformance() {
   return {
     isMobile,
     isTouch,
-    // Cap DPR for mobile
-    dpr: isMobile ? ([1, 1] as [number, number]) : ([1, 2] as [number, number]),
-    shadows: !isMobile,
-    // Optimization for particles - fewer on mobile
-    particleCount: isMobile ? 30 : 80,
+    // Aggressive performance: 1.0 for mobile/tablet (native resolution), 1.25 for desktop (crisp but fast)
+    dpr: isMobile || isTouch ? (1.0 as number) : (1.25 as number),
+    shadows: !isMobile && !isTouch,
+    // Fewer particles = less CPU/GPU strain
+    particleCount: isMobile ? 12 : isTouch ? 24 : 45,
     // Disable heavy effects like connections and bloom on mobile
     lowPower: isMobile || isTouch,
+    // Faster animations on desktop, simpler on mobile
+    quality: isMobile || isTouch ? "low" : "high",
   };
 }

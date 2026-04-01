@@ -6,14 +6,20 @@ import ProjectsSection from "@/components/sections/Projects";
 import SkillsSection from "@/components/sections/Skills";
 import TechStackSection from "@/components/sections/TechStack";
 import ContactSection from "@/components/sections/Contact";
+import SharedBackground from "@/components/layout/SharedBackground";
 
 export default function Home() {
   return (
     <>
       <HeroSection />
       <AboutSection />
-      <EducationSection />
-      <ServicesSection />
+      
+      <div className="relative bg-[#050505]/80">
+        <SharedBackground />
+        <EducationSection />
+        <ServicesSection />
+      </div>
+
       <ProjectsSection />
       <SkillsSection />
       <TechStackSection />

@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import ParticleField from "@/components/3d/ParticleField";
-import SplashCursor from "@/components/ui/SplashCursor";
-import AIChatBot from "@/components/ui/AIChatBot";
+import ErrorSuppressor from "@/components/ui/ErrorSuppressor";
+import ClientWrappers from "@/components/layout/ClientWrappers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,9 +31,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-white/20 cursor-none`}
       >
-        <AIChatBot />
-        <SplashCursor />
-        <ParticleField />
+        <ErrorSuppressor />
+        <ClientWrappers />
         <Navbar />
         <main className="min-h-screen relative z-[1]">
           {children}

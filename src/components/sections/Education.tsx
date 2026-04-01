@@ -1,11 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef, useCallback } from "react";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 export default function EducationSection() {
   const { isTouch } = useMobilePerformance();
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { margin: "200px" });
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = useCallback(() => {
@@ -26,7 +28,7 @@ export default function EducationSection() {
     const rotateY = ((x - centerX) / centerX) * 5;
 
     cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-  }, []);
+  }, [isTouch]);
 
   const handleMouseLeave = useCallback(() => {
     if (!cardRef.current) return;
@@ -35,14 +37,30 @@ export default function EducationSection() {
   }, []);
 
   return (
-    <section id="education" className="relative py-24 bg-[#050505]/80 border-t border-white/5 overflow-hidden">
-      {/* Floating geometric shapes */}
-      <div className="absolute top-20 right-20 w-8 h-8 border border-purple-500/20 rotate-45 float-slow hidden lg:block" />
-      <div className="absolute bottom-32 left-16 w-6 h-6 border border-indigo-500/20 rounded-full float-medium hidden lg:block" />
-      <div className="absolute top-1/2 right-1/4 w-4 h-4 bg-purple-500/10 rotate-12 float-fast hidden lg:block" />
-      <div className="absolute bottom-20 right-32 w-10 h-10 border border-white/5 rounded-lg rotate-[30deg] float-slow hidden lg:block" />
+    <section id="education" ref={sectionRef} className="relative py-24 bg-transparent border-t border-white/5 overflow-hidden z-10">
+      {/* Spline Background */}
+      {isInView && (
+        <div 
+          className="absolute inset-0 z-0 w-full h-full pointer-events-none opacity-60 mix-blend-screen"
+          style={{ clipPath: "inset(0 0 50px 0)" }}
+        >
+          <iframe 
+            src="https://my.spline.design/ailandingpagewebdesign3danimation-3O7QCYofBePoW7i6owf1xa4i/" 
+            frameBorder="0" 
+            width="100%" 
+            height="100%" 
+            style={{ border: "none" }}
+          />
+        </div>
+      )}
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-24 relative">
+      {/* Floating geometric shapes */}
+      <div className="absolute top-20 right-20 w-8 h-8 border border-purple-500/20 rotate-45 float-slow hidden lg:block z-10 pointer-events-none" />
+      <div className="absolute bottom-32 left-16 w-6 h-6 border border-indigo-500/20 rounded-full float-medium hidden lg:block z-10 pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 w-4 h-4 bg-purple-500/10 rotate-12 float-fast hidden lg:block z-10 pointer-events-none" />
+      <div className="absolute bottom-20 right-32 w-10 h-10 border border-white/5 rounded-lg rotate-[30deg] float-slow hidden lg:block z-10 pointer-events-none" />
+
+      <div className="max-w-[1440px] mx-auto px-6 md:px-24 relative z-10 pointer-events-auto">
         
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -102,7 +120,7 @@ export default function EducationSection() {
               onMouseLeave={handleMouseLeave}
               className="glow-border rounded-3xl preserve-3d shadow-xl hover:shadow-[0_20px_60px_-15px_rgba(139,92,246,0.2)] will-change-transform"
             >
-              <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-8 md:p-16 hover:bg-white/[0.04] transition-all duration-500 relative overflow-hidden group preserve-3d hover:border-purple-500/30">
+              <div className="bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-16 hover:bg-white/[0.04] transition-all duration-500 relative overflow-hidden group preserve-3d hover:border-purple-500/30">
                 {/* Animated glow */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/[0.03] rounded-full blur-[80px] group-hover:bg-purple-500/[0.06] transition-colors duration-700 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/[0.02] rounded-full blur-[60px] group-hover:bg-indigo-500/[0.05] transition-colors duration-700 pointer-events-none" />

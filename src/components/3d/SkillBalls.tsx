@@ -37,7 +37,6 @@ const TECH_ITEMS: { label: string; bg: string; fg: string }[] = [
   { label: "OpenAI",     bg: "#000000", fg: "#10a37f" },
   { label: "WebGL",      bg: "#990000", fg: "#ffffff" },
   { label: "WordPress",  bg: "#21759b", fg: "#ffffff" },
-  { label: "GitHub",     bg: "#181717", fg: "#ffffff" },
   { label: "Framer",     bg: "#0055ff", fg: "#ffffff" },
   { label: "Figma",      bg: "#1e1e1e", fg: "#a259ff" },
   { label: "Python",     bg: "#306998", fg: "#ffd43b" },

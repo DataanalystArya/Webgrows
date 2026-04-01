@@ -10,9 +10,9 @@ const TECHNOLOGIES_ROW_1 = [
 ];
 
 const TECHNOLOGIES_ROW_2 = [
-  "WebGL", "GSAP", "OpenAI API", "Git", "GitHub", "Vercel",
+  "WebGL", "GSAP", "OpenAI API", "Git", "Vercel",
   "Tailwind CSS", "Framer Motion", "Figma", "Python", "Docker", "Prisma",
-  "WebGL", "GSAP", "OpenAI API", "Git", "GitHub", "Vercel",
+  "WebGL", "GSAP", "OpenAI API", "Git", "Vercel",
   "Tailwind CSS", "Framer Motion", "Figma", "Python", "Docker", "Prisma",
 ];
 

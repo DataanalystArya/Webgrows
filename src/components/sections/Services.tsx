@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { Canvas } from "@react-three/fiber";
 import { useRef, useCallback } from "react";
-import WorkspaceModel from "@/components/3d/HighFidelityWorkspace";
+import { motion, useInView } from "framer-motion";
+import dynamic from "next/dynamic";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
+
+const SplineWorkspace = dynamic(() => import("@/components/3d/SplineWorkspace"), { ssr: false });
 
 const SERVICES = [
   { name: "Business Website Development", desc: "Modern, fast, and SEO-optimized websites" },
@@ -24,23 +25,30 @@ function ServiceCard({ service, index }: { service: typeof SERVICES[0]; index: n
     cardRef.current.style.transition = "none";
   }, []);
 
+  const frameRef = useRef<number>(0);
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current || isTouch) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
     
-    // Calculate rotation (-10 to 10 degrees)
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
+    // Cancel previous frame to avoid stacking
+    cancelAnimationFrame(frameRef.current);
+    
+    frameRef.current = requestAnimationFrame(() => {
+      const rect = cardRef.current!.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -10;
+      const rotateY = ((x - centerX) / centerX) * 10;
 
-    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
-  }, []);
+      cardRef.current!.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+    });
+  }, [isTouch]);
 
   const handleMouseLeave = useCallback(() => {
     if (!cardRef.current) return;
+    cancelAnimationFrame(frameRef.current);
     cardRef.current.style.transition = "transform 0.5s ease-out";
     cardRef.current.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
   }, []);
@@ -97,7 +105,7 @@ export default function ServicesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { margin: "100px" });
   return (
-    <section id="services" ref={sectionRef} className="relative min-h-screen py-24 bg-[#050505]/80 overflow-hidden flex items-center border-t border-white/5">
+    <section id="services" ref={sectionRef} className="relative min-h-screen py-24 bg-transparent overflow-hidden flex items-center border-t border-white/5 z-10">
       <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
         {/* Left Column: Static Content */}
@@ -134,9 +142,9 @@ export default function ServicesSection() {
             className="w-full h-full absolute inset-0 md:-right-24"
           >
             {isInView && (
-              <Canvas camera={{ position: [3.5, 2.0, 3.5], fov: 28 }} shadows={shadows} dpr={dpr} className="w-full h-full outline-none">
-                <WorkspaceModel />
-              </Canvas>
+              <div className="w-full h-full outline-none pointer-events-auto">
+                <SplineWorkspace />
+              </div>
             )}
           </motion.div>
         </div>

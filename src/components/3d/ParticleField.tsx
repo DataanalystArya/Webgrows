@@ -29,11 +29,11 @@ export default function ParticleField() {
         x: Math.random() * width,
         y: Math.random() * height,
         size: Math.random() * 2 + 0.5,
-        speedY: -(Math.random() * 0.3 + 0.1),
-        speedX: (Math.random() - 0.5) * 0.2,
+        speedY: -(Math.random() * 0.15 + 0.05), // Slower upward drift
+        speedX: (Math.random() - 0.5) * 0.1,    // Slower horizontal drift
         opacity: Math.random() * 0.5 + 0.1,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.02 + 0.005,
+        pulseSpeed: Math.random() * 0.01 + 0.002, // Slower pulsing
       });
     }
     particlesRef.current = particles;
@@ -61,12 +61,19 @@ export default function ParticleField() {
       mouseRef.current.y = (e.clientY / window.innerHeight) * 2 - 1;
     };
 
+    const handleVisibility = () => {
+      if (!document.hidden) {
+        animate();
+      }
+    };
+
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("visibilitychange", handleVisibility);
 
     const animate = () => {
-      if (!ctx || !canvas) return;
+      if (!ctx || !canvas || document.hidden) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const mx = mouseRef.current.x;

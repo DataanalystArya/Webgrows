@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useTransform, useInView } from "framer-motion";
-import { Canvas } from "@react-three/fiber";
-import HeroModel from "@/components/3d/HeroModel";
+import dynamic from "next/dynamic";
+import Script from "next/script";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
+
+const Spline = dynamic(() => import("@splinetool/react-spline"), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full flex items-center justify-center pointer-events-none opacity-10">...</div>
+});
 
 const FLOATING_BADGES = [
   { label: "Next.js", x: "10%", y: "20%", delay: 0 },
@@ -15,7 +20,7 @@ const FLOATING_BADGES = [
 ];
 
 export default function HeroSection() {
-  const { dpr, shadows, isTouch } = useMobilePerformance();
+  const { isTouch } = useMobilePerformance();
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { margin: "100px" });
   const mousePointer = useRef({ x: 0, y: 0 });
@@ -30,7 +35,10 @@ export default function HeroSection() {
   const badgeRotateX = useTransform(mouseY, [-500, 500], [5, -5]);
   const badgeRotateY = useTransform(mouseX, [-500, 500], [-5, 5]);
 
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    setIsMounted(true);
     const handleMouseMove = (e: MouseEvent) => {
       if (isTouch) return;
       // 3D Model Coordinates (-1 to 1)
@@ -44,16 +52,36 @@ export default function HeroSection() {
     
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, isTouch]);
 
   return (
-    <section id="home" ref={sectionRef} className="relative min-h-[100vh] flex items-center overflow-hidden bg-[#050505]/80 pt-24 lg:pt-0 perspective-1000">
+    <section id="home" ref={sectionRef} className="relative min-h-[100vh] flex items-center overflow-hidden bg-[#050505]/95 pt-24 lg:pt-0 perspective-1000 will-change-contents">
+      {/* Background Spline */}
+      <div 
+        className="absolute inset-0 z-0 w-full h-full pointer-events-auto"
+        style={{ clipPath: "inset(0 0 50px 0)" }}
+      >
+        {isMounted && isInView && (
+          <>
+            <Script 
+              src="https://unpkg.com/@splinetool/viewer@1.12.73/build/spline-viewer.js" 
+              type="module"
+              strategy="afterInteractive"
+            />
+            <div 
+              className="w-full h-full absolute inset-0 opacity-60 mix-blend-screen"
+              dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/MOrN1CeLkZ5BVHIa/scene.splinecode" class="w-full h-full"></spline-viewer>` }} 
+            />
+          </>
+        )}
+      </div>
+
       {/* Scan-line overlay */}
-      <div className="scanline-overlay pointer-events-none" />
+      <div className="scanline-overlay pointer-events-none z-[1]" />
 
       {/* Floating tech badges with 3D Parallax */}
       <motion.div 
-        className="absolute inset-0 pointer-events-none preserve-3d"
+        className="absolute inset-0 pointer-events-none preserve-3d will-change-transform"
         style={{ rotateX: badgeRotateX, rotateY: badgeRotateY }}
       >
         {FLOATING_BADGES.map((badge) => (
@@ -62,7 +90,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.5 + badge.delay, duration: 0.6, type: "spring" }}
-            className="absolute hidden lg:flex items-center gap-2 px-4 py-2 bg-white/[0.04] border border-white/10 rounded-full backdrop-blur-md text-xs text-neutral-400 font-medium z-[5] shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+            className="absolute hidden lg:flex items-center gap-2 px-4 py-2 bg-white/[0.04] border border-white/10 rounded-full backdrop-blur-md text-xs text-neutral-400 font-medium z-[5] shadow-[0_0_15px_rgba(255,255,255,0.05)] will-change-transform"
             style={{ left: badge.x, top: badge.y, transform: "translateZ(30px)" }}
           >
             <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
@@ -81,7 +109,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.2, 0, 0, 1] }}
-            className="preserve-3d"
+            className="preserve-3d will-change-transform"
           >
             <motion.h1 
               className="text-fluid-h1 font-bold text-white mb-2 text-center lg:text-left drop-shadow-2xl"
@@ -145,15 +173,27 @@ export default function HeroSection() {
 
         {/* Right Side 3D Robot Model */}
         <motion.div 
-          className="pointer-events-none lg:pointer-events-auto w-full h-[350px] md:h-[500px] lg:h-[650px] lg:w-[45%] relative flex items-center justify-center mt-8 lg:mt-0"
+          className="pointer-events-none w-full h-[350px] md:h-[500px] lg:h-[650px] lg:w-[45%] relative flex items-center justify-center mt-8 lg:mt-0"
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 1.2, ease: [0.2, 0, 0, 1] }}
         >
-          {isInView && (
-            <Canvas camera={{ position: [0, 1.5, 5], fov: 40 }} gl={{ alpha: true }} dpr={dpr} shadows={shadows}>
-              <HeroModel mousePointer={mousePointer} />
-            </Canvas>
+          {isInView && isMounted && (
+            <>
+              <div 
+                className="absolute inset-0 w-full h-full"
+                style={{ 
+                  transform: "scale(1.1)", // Increase scale slightly to match visual weight
+                  transformOrigin: "center center",
+                  clipPath: "inset(0 0 50px 0)" // clip out bottom watermark if any
+                }}
+              >
+                <Spline 
+                  scene="https://prod.spline.design/55SNHUwzLMmzhrVn/scene.splinecode"
+                  className="w-full h-full bg-transparent"
+                />
+              </div>
+            </>
           )}
         </motion.div>
         
