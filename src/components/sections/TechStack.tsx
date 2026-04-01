@@ -33,7 +33,7 @@ export default function TechStackSection() {
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-purple-500/[0.02] blur-[100px] rounded-full pointer-events-none" />
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-24 relative z-10">
+      <div className="section-container relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

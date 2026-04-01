@@ -1,14 +1,12 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef, useCallback } from "react";
-import Script from "next/script";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 export default function EducationSection() {
   const { isTouch } = useMobilePerformance();
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { margin: "200px" });
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = useCallback(() => {
@@ -39,19 +37,6 @@ export default function EducationSection() {
 
   return (
     <section id="education" ref={sectionRef} className="relative py-24 bg-transparent border-t border-white/5 overflow-hidden z-10">
-      {/* Spline Background */}
-      {isInView && (
-        <div 
-          className="absolute inset-0 z-0 w-full h-full pointer-events-none opacity-60 mix-blend-screen"
-          style={{ clipPath: "inset(0 0 50px 0)" }}
-        >
-          <div 
-            className="w-full h-full"
-            dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/ailandingpagewebdesign3danimation-3O7QCYofBePoW7i6owf1xa4i/" class="w-full h-full" loading="lazy"></spline-viewer>` }} 
-          />
-        </div>
-      )}
-
       {/* Floating geometric shapes */}
       <div className="absolute top-20 right-20 w-8 h-8 border border-purple-500/20 rotate-45 float-slow hidden lg:block z-10 pointer-events-none" />
       <div className="absolute bottom-32 left-16 w-6 h-6 border border-indigo-500/20 rounded-full float-medium hidden lg:block z-10 pointer-events-none" />

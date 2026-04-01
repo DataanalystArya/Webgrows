@@ -13,6 +13,7 @@ import {
   ArrowRight,
   Sparkles
 } from "lucide-react";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 interface Message {
   id: string;
@@ -31,6 +32,7 @@ const QUICK_OPTIONS = [
 ];
 
 export default function AIChatBot() {
+  const { isMobile } = useMobilePerformance();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -100,27 +102,41 @@ export default function AIChatBot() {
   return (
     <>
       {/* 1. Sticky Search Bar / Toggle */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-lg px-6 pointer-events-none">
+      <div className={`fixed bottom-6 right-6 lg:left-1/2 lg:-translate-x-1/2 z-[150] ${isMobile ? "w-auto" : "w-full max-w-lg px-6"} pointer-events-none`}>
         <motion.div
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="pointer-events-auto"
         >
-          <div
-            onClick={() => { if (!isOpen) setIsOpen(true); }}
-            className={`
-              relative flex items-center bg-black/60 backdrop-blur-xl border border-white/10 rounded-full px-4 py-3 cursor-pointer
-              shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all hover:border-purple-500/50 group
-              ${isOpen ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"}
-            `}
-          >
-            <Search className="w-5 h-5 text-neutral-400 group-hover:text-purple-400 transition-colors mr-3" />
-            <span className="text-neutral-400 flex-1 truncate">Ask me anything about your project...</span>
-            <div className="flex items-center gap-2">
-              <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-white/10 text-neutral-400 uppercase tracking-tighter">AI</span>
-              <MessageCircle className="w-5 h-5 text-purple-500" />
+          {isMobile ? (
+            <button
+              onClick={() => setIsOpen(true)}
+              className={`
+                w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center shadow-2xl border border-white/20
+                hover:scale-110 active:scale-95 transition-all
+                ${isOpen ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"}
+              `}
+            >
+              <MessageCircle className="w-7 h-7 text-white" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-black animate-pulse" />
+            </button>
+          ) : (
+            <div
+              onClick={() => { if (!isOpen) setIsOpen(true); }}
+              className={`
+                relative flex items-center bg-black/60 backdrop-blur-xl border border-white/10 rounded-full px-4 py-3 cursor-pointer
+                shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all hover:border-purple-500/50 group
+                ${isOpen ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"}
+              `}
+            >
+              <Search className="w-5 h-5 text-neutral-400 group-hover:text-purple-400 transition-colors mr-3" />
+              <span className="text-neutral-400 flex-1 truncate">Ask me anything about your project...</span>
+              <div className="flex items-center gap-2">
+                <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-white/10 text-neutral-400 uppercase tracking-tighter">AI</span>
+                <MessageCircle className="w-5 h-5 text-purple-500" />
+              </div>
             </div>
-          </div>
+          )}
         </motion.div>
       </div>
 

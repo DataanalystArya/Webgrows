@@ -27,6 +27,8 @@ export function useMobilePerformance() {
     particleCount: isMobile ? 8 : isTouch ? 24 : 45,
     // Disable heavy effects like connections and bloom on mobile
     lowPower: isMobile || isTouch,
+    // Precision hint for mobile GPUs to prevent driver-level crashes
+    precision: isMobile ? "lowp" : "highp",
     // Faster animations on desktop, simpler on mobile
     quality: isMobile || isTouch ? "low" : "high",
   };

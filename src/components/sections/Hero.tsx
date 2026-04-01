@@ -20,9 +20,9 @@ const FLOATING_BADGES = [
 ];
 
 export default function HeroSection() {
-  const { isTouch } = useMobilePerformance();
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { margin: "100px" });
+  const { isMobile, isTouch } = useMobilePerformance();
+  const isInView = useInView(sectionRef, { margin: "0px" });
   const mousePointer = useRef({ x: 0, y: 0 });
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -100,7 +100,7 @@ export default function HeroSection() {
       </motion.div>
 
       {/* 1440px Centered Grid */}
-      <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full flex flex-col lg:flex-row items-center justify-between relative z-10 py-12 lg:py-0">
+      <div className="section-container flex flex-col lg:flex-row items-center justify-between relative z-10 py-12 lg:py-0 gap-8 lg:gap-0">
         
         {/* Left Side Content - Parallax Applied */}
         <div className="w-full lg:w-[55%] flex flex-col justify-center text-center lg:text-left z-10 perspective-1000">

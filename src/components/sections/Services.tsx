@@ -102,9 +102,9 @@ function ServiceCard({ service, index }: { service: typeof SERVICES[0]; index: n
 }
 
 export default function ServicesSection() {
-  const { dpr, shadows, isTouch } = useMobilePerformance();
+  const { isMobile, isTouch } = useMobilePerformance();
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { margin: "100px" });
+  const isInView = useInView(sectionRef, { margin: isMobile ? "0px" : "100px" });
   return (
     <section id="services" ref={sectionRef} className="relative min-h-screen py-24 bg-transparent overflow-hidden flex items-center border-t border-white/5 z-10">
       <Script 
@@ -112,7 +112,7 @@ export default function ServicesSection() {
         type="module"
         strategy="afterInteractive"
       />
-      <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="section-container grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-16 items-center">
         
         {/* Left Column: Static Content */}
         <div className="flex flex-col justify-center">

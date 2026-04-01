@@ -22,15 +22,15 @@ function LoadingFallback() {
 }
 
 export default function SkillsSection() {
-  const { dpr, shadows, isTouch } = useMobilePerformance();
+  const { dpr, shadows, isTouch, isMobile } = useMobilePerformance();
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { margin: "100px" });
 
   return (
     <section id="skills" ref={sectionRef} className="relative h-screen bg-[#050505] overflow-hidden flex items-center justify-center">
       
-      {/* Text Overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center p-6 text-center">
+      {/* Text Overlay — Floating on top of 3D Scene */}
+      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center text-center px-6">
         <h2 className="text-fluid-h2 font-bold text-white mb-4 mix-blend-difference">
           Interactive Skills
         </h2>
@@ -40,7 +40,7 @@ export default function SkillsSection() {
       </div>
 
       {/* 3D Physics Canvas */}
-      <div className="w-full h-full cursor-none">
+      <div className="absolute inset-0 w-full h-full cursor-none">
         <Suspense fallback={<LoadingFallback />}>
           {isInView && (
             <Canvas
@@ -50,19 +50,22 @@ export default function SkillsSection() {
               gl={{ 
                 alpha: true, 
                 antialias: !isTouch, // Disable antialias on mobile for massive perf gain
-                powerPreference: "high-performance" // Prioritize GPU
+                powerPreference: "high-performance", // Prioritize GPU
+                precision: isMobile ? "lowp" : "highp" // Stability hint
               }}
               style={{ background: "#050505" }}
             >
               <color attach="background" args={["#050505"]} />
               <SkillBallsScene />
-              <EffectComposer>
-                <N8AO
-                  distanceFalloff={1}
-                  aoRadius={1}
-                  intensity={4}
-                />
-              </EffectComposer>
+              {!isMobile && (
+                <EffectComposer>
+                  <N8AO
+                    distanceFalloff={1}
+                    aoRadius={1}
+                    intensity={4}
+                  />
+                </EffectComposer>
+              )}
             </Canvas>
           )}
         </Suspense>

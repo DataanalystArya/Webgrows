@@ -9,9 +9,9 @@ import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 const SplineAbout = dynamic(() => import("@/components/3d/SplineAbout"), { ssr: false });
 
 export default function AboutSection() {
-  const { dpr, shadows, isTouch } = useMobilePerformance();
+  const { isMobile, isTouch } = useMobilePerformance();
   const containerRef = useRef<HTMLElement>(null);
-  const isInView = useInView(containerRef, { margin: "200px" });
+  const isInView = useInView(containerRef, { margin: isMobile ? "0px" : "200px" });
   const cardRef = useRef<HTMLDivElement>(null);
   
   const { scrollYProgress } = useScroll({
@@ -68,7 +68,7 @@ export default function AboutSection() {
         type="module"
         strategy="afterInteractive"
       />
-      <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 lg:gap-24 items-center perspective-1000">
+      <div className="section-container grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 lg:gap-24 items-center perspective-1000">
         
         {/* Left Side — Wide-Angle Expanded 3D Gallery */}
         <motion.div 

@@ -53,7 +53,7 @@ export default function ContactSection() {
   return (
     <section id="contact" ref={sectionRef} className="py-24 bg-[#050505]/80 border-t border-white/5 relative overflow-hidden">
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-24 w-full relative z-10">
+      <div className="section-container relative z-10">
         
         {/* Section Header — Centered */}
         <motion.div
