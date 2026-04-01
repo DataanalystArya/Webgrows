@@ -56,25 +56,27 @@ export default function HeroSection() {
 
   return (
     <section id="home" ref={sectionRef} className="relative min-h-[100vh] flex items-center overflow-hidden bg-[#050505]/95 pt-24 lg:pt-0 perspective-1000 will-change-contents">
-      {/* Background Spline */}
-      <div 
-        className="absolute inset-0 z-0 w-full h-full pointer-events-auto"
-        style={{ clipPath: "inset(0 0 50px 0)" }}
-      >
-        {isMounted && isInView && (
-          <>
-            <Script 
-              src="https://unpkg.com/@splinetool/viewer@1.12.73/build/spline-viewer.js" 
-              type="module"
-              strategy="afterInteractive"
-            />
-            <div 
-              className="w-full h-full absolute inset-0 opacity-60 mix-blend-screen"
-              dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/MOrN1CeLkZ5BVHIa/scene.splinecode" class="w-full h-full" loading="lazy"></spline-viewer>` }} 
-            />
-          </>
-        )}
-      </div>
+      {/* Background Spline — Disabled on mobile for performance */}
+      {!isMobile && (
+        <div 
+          className="absolute inset-0 z-0 w-full h-full pointer-events-auto"
+          style={{ clipPath: "inset(0 0 50px 0)" }}
+        >
+          {isMounted && isInView && (
+            <>
+              <Script 
+                src="https://unpkg.com/@splinetool/viewer@1.12.73/build/spline-viewer.js" 
+                type="module"
+                strategy="afterInteractive"
+              />
+              <div 
+                className="w-full h-full absolute inset-0 opacity-60 mix-blend-screen"
+                dangerouslySetInnerHTML={{ __html: `<spline-viewer url="https://prod.spline.design/MOrN1CeLkZ5BVHIa/scene.splinecode" class="w-full h-full" loading="lazy"></spline-viewer>` }} 
+              />
+            </>
+          )}
+        </div>
+      )}
 
       {/* Scan-line overlay */}
       <div className="scanline-overlay pointer-events-none z-[1]" />

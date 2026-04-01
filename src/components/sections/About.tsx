@@ -71,16 +71,18 @@ export default function AboutSection() {
       <div className="section-container grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 lg:gap-24 items-center perspective-1000">
         
         {/* Left Side — Wide-Angle Expanded 3D Gallery */}
-        <motion.div 
-          style={{ opacity: modelOpacity, scale: modelScale }}
-          className="relative h-[500px] md:h-[700px] lg:h-[850px] w-full flex items-center justify-center order-2 lg:order-1 overflow-visible pointer-events-auto"
-        >
-          {isInView && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] lg:w-[140%] lg:h-[120%]">
-              <SplineAbout />
-            </div>
-          )}
-        </motion.div>
+        {!isMobile && (
+          <motion.div 
+            style={{ opacity: modelOpacity, scale: modelScale }}
+            className="relative h-[500px] md:h-[700px] lg:h-[850px] w-full flex items-center justify-center order-2 lg:order-1 overflow-visible pointer-events-auto"
+          >
+            {isInView && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] lg:w-[140%] lg:h-[120%]">
+                <SplineAbout />
+              </div>
+            )}
+          </motion.div>
+        )}
 
         {/* Right Side Content */}
         <motion.div

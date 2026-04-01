@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useInView } from "framer-motion";
+import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 const Spline = dynamic(() => import("@splinetool/react-spline"), { 
   ssr: false,
 });
 
 export default function SharedBackground() {
+  const { isMobile } = useMobilePerformance();
   const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { margin: "200px" });
@@ -17,7 +19,7 @@ export default function SharedBackground() {
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) return null;
+  if (!isMounted || isMobile) return null;
 
   return (
     <div 
