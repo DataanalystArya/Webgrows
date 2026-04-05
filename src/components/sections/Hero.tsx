@@ -5,10 +5,11 @@ import { motion, useMotionValue, useTransform, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 const Spline = dynamic(() => import("@splinetool/react-spline"), { 
   ssr: false,
-  loading: () => <div className="w-full h-full flex items-center justify-center pointer-events-none opacity-10">...</div>
+  loading: () => <Skeleton className="w-full h-full opacity-50" />
 });
 
 const FLOATING_BADGES = [

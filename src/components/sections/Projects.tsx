@@ -3,6 +3,7 @@
 import { useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { ImageSkeleton } from "@/components/ui/Skeleton";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
 
 const PROJECTS = [
@@ -125,7 +126,8 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
 
           {/* Browser Image Content */}
           <div className="relative aspect-[16/10] overflow-hidden bg-black z-0">
-            <Image
+            <ImageSkeleton
+              wrapperClassName="absolute inset-0 w-full h-full"
               src={`/projects/${project.id}.png`}
               alt={`${project.name} Website Screenshot`}
               fill

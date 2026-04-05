@@ -5,8 +5,12 @@ import { motion, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
+import { Skeleton } from "@/components/ui/Skeleton";
 
-const SplineWorkspace = dynamic(() => import("@/components/3d/SplineWorkspace"), { ssr: false });
+const SplineWorkspace = dynamic(() => import("@/components/3d/SplineWorkspace"), { 
+  ssr: false,
+  loading: () => <Skeleton className="w-full h-[600px] rounded-3xl opacity-50" />
+});
 
 const SERVICES = [
   { name: "Business Website Development", desc: "Modern, fast, and SEO-optimized websites" },

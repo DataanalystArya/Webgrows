@@ -5,8 +5,12 @@ import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 import { useMobilePerformance } from "@/hooks/useMobilePerformance";
+import { Skeleton } from "@/components/ui/Skeleton";
 
-const SplineAbout = dynamic(() => import("@/components/3d/SplineAbout"), { ssr: false });
+const SplineAbout = dynamic(() => import("@/components/3d/SplineAbout"), { 
+  ssr: false,
+  loading: () => <Skeleton className="w-[120%] h-[120%] rounded-full opacity-40 mx-auto mt-20" />
+});
 
 export default function AboutSection() {
   const { isMobile, isTouch } = useMobilePerformance();
